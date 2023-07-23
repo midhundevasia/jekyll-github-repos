@@ -1,0 +1,53 @@
+name: Release Gem
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        required: true
+        type: string
+      release:
+        description: "Whether to create a GitHub Release"
+        type: boolean
+        default: true
+jobs:
+  release:
+    name: "Release Gem (Ruby ${{ matrix.ruby_version }})"
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: true
+      matrix:
+        ruby_version:
+          - 2.7
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: "Set up Ruby ${{ matrix.ruby_version }}"
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+          bundler-cache: true
+      - name: Build and Publish Gem
+        env: 
+          TAG_NAME: ${{ inputs.tag_name }}
+          RUBY_GEMS_API_KEY: ${{ secrets.RUBY_GEMS_API_KEY }}
+        run: |
+          set +x
+          mkdir -p ~/.gem
+          cat << EOF > ~/.gem/credentials
+          ---
+          :rubygems_api_key: $RUBY_GEMS_API_KEY
+          EOF
+          chmod 0600 ~/.gem/credentials
+          set -x
+          sed -i "s/0\.0\.0/$TAG_NAME/g" lib/version.rb
+          gem build jekyll-github-repos.gemspec
+          gem push jekyll-github-repos-$TAG_NAME.gem -k rubygems
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
