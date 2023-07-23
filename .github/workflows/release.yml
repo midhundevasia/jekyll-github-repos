@@ -46,7 +46,7 @@ jobs:
           EOF
           chmod 0600 ~/.gem/credentials
           set -x
-          sed -i "s/0\.0\.0/$TAG_NAME/g" lib/version.rb
+          sed -i "s/0\.0\.0/$TAG_NAME/g" lib/jekyll-github-repos/version.rb
           gem build jekyll-github-repos.gemspec
           gem push jekyll-github-repos-$TAG_NAME.gem -k rubygems
           git tag $TAG_NAME
