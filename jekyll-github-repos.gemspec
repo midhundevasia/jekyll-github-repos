@@ -1,4 +1,4 @@
-require_relative "lib/version"
+require_relative "lib/jekyll-github-repos/version"
 
 Gem::Specification.new do |spec|
     spec.name          = 'jekyll-github-repos'
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
     spec.homepage      = 'https://github.com/midhundevasia/jekyll-github-repos'
     spec.license       = 'MIT'
   
-    spec.files         = Dir['lib/**/*', 'jekyll-github-repos.gemspec', 'README.md', 'License']
+    spec.files         = Dir['lib/**/*', 'jekyll-github-repos.gemspec', 'README.md', 'LICENSE']
     spec.require_paths = ['lib']
 
     if spec.respond_to?(:metadata)
@@ -23,5 +23,4 @@ Gem::Specification.new do |spec|
     spec.add_dependency "octokit", ">= 5.6"
     spec.add_development_dependency "bundler", "~> 1.15"
 
-  end
-  
+end

@@ -2,7 +2,7 @@
 
 require "jekyll"
 require "octokit"
-require "generator"
+require "jekyll-github-repos/generator"
 
 module JekyllGithubRepos
 end
