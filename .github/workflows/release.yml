@@ -12,6 +12,9 @@ on:
       tag_name:
         required: true
         type: string
+      otp:
+        required: true
+        type: string
       release:
         description: "Whether to create a GitHub Release"
         type: boolean
@@ -36,6 +39,7 @@ jobs:
       - name: Build and Publish Gem
         env: 
           TAG_NAME: ${{ inputs.tag_name }}
+          OTP: ${{ inputs.otp }}
           RUBY_GEMS_API_KEY: ${{ secrets.RUBY_GEMS_API_KEY }}
         run: |
           set +x
@@ -48,6 +52,6 @@ jobs:
           set -x
           sed -i "s/0\.0\.0/$TAG_NAME/g" lib/jekyll-github-repos/version.rb
           gem build jekyll-github-repos.gemspec
-          gem push jekyll-github-repos-$TAG_NAME.gem -k rubygems
+          gem push jekyll-github-repos-$TAG_NAME.gem -k rubygems --otp $OTP
           git tag $TAG_NAME
           git push origin $TAG_NAME
